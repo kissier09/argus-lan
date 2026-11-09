@@ -7,6 +7,7 @@ class Device extends Model
 {
     protected $fillable = [
         'hostname',
+        'rustdesk_id',
         'ip_address',
         'mac_address',
         'operating_system',
@@ -15,7 +16,7 @@ class Device extends Model
         'ram_usage',
         'battery_percentage',
         'last_seen_at',
-
+        'api_token_hash',
     ];
 
     protected function casts(): array

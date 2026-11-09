@@ -19,8 +19,8 @@
         </svg>
         Back to Dashboard
     </a>
-    
-    
+
+
     <div class="space-y-4">
 
         {{-- Top-left Add Device button --}}
@@ -45,7 +45,7 @@
     </div>
 
 
-    
+
     <div class="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
             <h1 class="text-2xl font-bold text-white">
@@ -57,7 +57,7 @@
             </p>
         </div>
 
-        
+
         <div class="w-full min-w-0 sm:max-w-2xl">
 
             {{-- Expanded Search Form --}}
@@ -86,9 +86,9 @@
     </div>
 
 
-    
 
-    
+
+
     {{-- Three Cards in One Horizontal Row --}}
     <div class="flex w-full flex-nowrap gap-3">
 
@@ -149,7 +149,7 @@
             </div>
         @else
             <div class="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
-                
+
                 @foreach ($devices as $device)
                     <div class="relative">
 
@@ -265,9 +265,48 @@
                                 </div>
 
                             </div>
+
                         </a>
+
+                        {{-- RustDesk Live Preview --}}
+                        <div class="mt-3">
+                            @if (strtolower($device->status ?? '') === 'online' && $device->rustdesk_id)
+                                <a
+                                    href="rustdesk://connection/new/{{ preg_replace('/\s+/', '', $device->rustdesk_id) }}"
+                                    class="flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-600 bg-cyan-600/10 px-4 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-600 hover:text-white"
+                                    title="Open this computer in RustDesk"
+                                >
+                                    <svg xmlns="http://www.w3.org/2000/svg"
+                                        class="h-5 w-5"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                        stroke-width="1.8">
+                                        <path stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                            d="M15 10l4.5-3v10L15 14m-10 5h9a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                    </svg>
+                                    Preview Live Screen
+                                </a>
+                            @else
+                                <button
+                                    type="button"
+                                    disabled
+                                    class="flex w-full cursor-not-allowed items-center justify-center gap-2 rounded-lg border border-slate-700 bg-slate-800 px-4 py-3 text-sm font-semibold text-slate-500 opacity-60"
+                                    title="{{ strtolower($device->status ?? '') !== 'online' ? 'Device is offline' : 'RustDesk ID is not configured' }}"
+                                >
+                                    @if (strtolower($device->status ?? '') !== 'online')
+                                        Device Offline - Preview Unavailable
+                                    @else
+                                        RustDesk ID Not Configured
+                                    @endif
+                                </button>
+                            @endif
+                        </div>
+
                     </div>
                 @endforeach
+
 
             </div>
 
@@ -278,3 +317,8 @@
     </div>
 </div>
 @endsection
+<script>
+    setInterval(function () {
+        window.location.reload();
+    }, 5000);
+</script>

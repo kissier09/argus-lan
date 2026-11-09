@@ -21,3 +21,25 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# ARCLUS Python files
+__pycache__/
+*.py[cod]
+face-env/
+venv/
+
+# Generated build folders
+/build/
+/dist/
+
+# Database backups
+*.sql
+*.sql.gz
+
+# Temporary backup files
+*.bak
+*.backup
+*_backup_*
+
+# Old QR controller backup
+*qr-backup.php

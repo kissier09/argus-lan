@@ -34,5 +34,9 @@ return [
             'channel' => env('SLACK_BOT_USER_DEFAULT_CHANNEL'),
         ],
     ],
+    'face_verification' => [
+        'url' => env('FACE_SERVICE_URL', 'http://127.0.0.1:9000'),
+        'token' => env('FACE_SERVICE_TOKEN'),
+    ],
 
 ];

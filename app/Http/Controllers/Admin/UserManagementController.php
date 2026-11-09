@@ -136,9 +136,14 @@ class UserManagementController extends Controller
     }
     public function showQr(User $user)
     {
+        if (!$user->qr_code_uuid) {
+            $user->qr_code_uuid = (string) Str::uuid();
+            $user->save();
+        }
+
         $result = Builder::create()
             ->writer(new SvgWriter())
-            ->data($user->student_number)
+            ->data($user->qr_code_uuid)
             ->size(300)
             ->margin(10)
             ->build();

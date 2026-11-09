@@ -19,14 +19,18 @@ class DeviceManagementController extends Controller
             $status = 'all';
         }
 
+        // A device is online only if it sent a heartbeat
+        // within the last 10 seconds.
+        // Device status represents student authentication.
+
         $devices = Device::query()
             ->when($status === 'online', function ($query) {
-                $query->whereRaw('LOWER(status) = ?', ['online']);
+                $query->where('status', 'online');
             })
             ->when($status === 'offline', function ($query) {
                 $query->where(function ($q) {
-                    $q->whereNull('status')
-                        ->orWhereRaw('LOWER(status) != ?', ['online']);
+                    $q->where('status', 'offline')
+                        ->orWhereNull('status');
                 });
             })
             ->when($search !== '', function ($query) use ($search) {
@@ -41,10 +45,11 @@ class DeviceManagementController extends Controller
             ->paginate(9)
             ->withQueryString();
 
+        // Calculate displayed status for every device on this page.
         $totalDevices = Device::count();
-        $onlineDevices = Device::whereRaw(
-            'LOWER(status) = ?', ['online']
-        )->count();
+
+        $onlineDevices = Device::where('status', 'online')->count();
+
         $offlineDevices = $totalDevices - $onlineDevices;
 
         return view('admin.devices.index', compact(
@@ -56,9 +61,7 @@ class DeviceManagementController extends Controller
             'offlineDevices'
         ));
     }
-    
-    
-    
+
     public function destroy(Device $device)
     {
         $device->delete();
@@ -67,7 +70,4 @@ class DeviceManagementController extends Controller
             ->route('admin.devices.index')
             ->with('success', 'Device deleted successfully. Historical activity logs have been preserved.');
     }
-
-
-
 }
